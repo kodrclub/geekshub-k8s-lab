@@ -1,0 +1,50 @@
+# Minikube
+
+## Instalar Minikube
+
+Instalar Minikube 1.6.2 con Kubernetes 1.17.0 y Docker 19.03.5
+
+Seguiremos las instrucciones oficiales detalladas [aquí](https://kubernetes.io/es/docs/tasks/tools/install-minikube/)
+
+
+En otro terminal ejecutamos
+```
+minikube start --vm-driver=virtualbox
+```
+
+Cambiamos el contexto de kubectl a minikube
+```                     
+kubectl config use-context minikube 
+```
+
+Más información con:
+```
+kubectl config get-contexts                          
+kubectl config current-context  
+```
+
+Desplegamos hello-minikube
+```
+kubectl create deployment hello-minikube --image=k8s.gcr.io/echoserver:1.10
+```
+
+Ahora exponemos el puerto 8080 de hello-minikube al exterior y obtenemos la url
+```
+kubectl expose deployment hello-minikube --type=NodePort --port=8080
+```
+
+Deberemos esperar a que esté desplegado 
+```
+kubectl get pods
+```
+
+cuando lo esté ya podremos obtener su URL
+```
+minikube service hello-minikube --url
+```
+
+Si todo está en orden borraremos el servicio y el despliegue
+```
+kubectl delete services hello-minikube
+kubectl delete deployment hello-minikube
+```
