@@ -1,0 +1,43 @@
+version: '3'
+
+# Los volúmenes se comparten en el scope del docker-compose
+# Si queremos unos volúmenes válidos para todo el entorno de 
+# docker, deberemos crearlos manualmente con "docker create volume"
+
+volumes:
+  jenkins-docker-certs:
+  jenkins-data:
+
+services:
+  jenkins-docker:
+    image: docker:dind
+    ports:
+      - "2376:2376"
+    volumes:
+      - jenkins-docker-certs:/certs/client 
+      - jenkins-data:/var/jenkins_home 
+    networks:
+      jenkins:
+        aliases:
+          - docker
+    environment:
+      DOCKER_TLS_CERTDIR: /certs
+    privileged: true
+
+  jenkins-blueocean:
+    image: "jenkinsci/blueocean"
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+    volumes:
+      - jenkins-docker-certs:/certs/client 
+      - jenkins-data:/var/jenkins_home 
+    networks:
+      jenkins:
+    environment:
+      DOCKER_HOST: tcp://docker:2376
+      DOCKER_CERT_PATH: /certs/client
+      DOCKER_TLS_VERIFY: 1
+
+networks:
+  jenkins:
