@@ -12,17 +12,11 @@ En primer lugar necesitaremos descargarnos [Virtualbox 6.1](https://www.virtualb
 
 Y seguimos las instrucciones necesarias para intalarla en nuestro sistema operativo.
 
-## Instalar Lubuntu 16.04
-
-Instalar las herramientas de Virtualbox
-```
-sudo apt install virtualbox-guest-dkms
-```
 
 ## Clonar repositorio del Lab
 
 ```
-git clone https://github.com/escarti/orchestration-geekshub-lab.git
+git clone https://github.com/escarti/geekshub-k8s-lab.git
 ```
 
 > Si queremos ahorrarnos algo de tiempo podemos guardar las credenciales usando 
