@@ -30,7 +30,7 @@ EOF
 Deplegamos los secrets en el cluster
 
 ```
-kubectl apply -f secrets.yml
+kubectl apply -f deployments/secrets.yml
 ```
 
 > IMPORTANTE: Estos credenciales no están encriptados y no deberían subirse a un repositorio sin encriptar previamente. Se puede usar un gestor de secretos como Vault o git-cript.
@@ -89,7 +89,7 @@ spec:
 Llegados a este punto podemos hacer un despliegue y verificar que todo esté en orden.
 
 ```
-kubectl apply -f deployment/postgresql-deployment.yaml
+kubectl apply -f deployments/postgresql-deployment.yaml
 ```
 
 Si hubiera algún error siempre podemos usar el comando
@@ -202,4 +202,5 @@ Con el siguiente comando enviaremos toda la información del puerto local 25432 
 ```
 kubectl port-forward deployment/postgresql-deployment 25432:5432
 ```
+
 > ENHORABUENA hemos desplegado nuestra base de datos en el cluster de Kubernetes con datos persistentes

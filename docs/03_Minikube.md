@@ -12,7 +12,12 @@ En otro terminal ejecutamos
 minikube start --vm-driver=virtualbox
 ```
 
-Cambiamos el contexto de kubectl a minikube
+Verificamos que estamos en el contexto de minikube:
+```
+kubectl config current-context
+```
+
+Si la consola no nos devuelve `minikube` deberemos cambiar el contexto de kubectl a minikube
 ```                     
 kubectl config use-context minikube 
 ```

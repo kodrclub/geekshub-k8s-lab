@@ -15,7 +15,7 @@ docker volume create jenkins-docker-certs
 docker volume create jenkins-data
 ```
 
-Para poder ejecutar comandos dentro de Jenkins instaladmos docker:dind
+Para poder ejecutar comandos dentro de Jenkins instalamos docker:dind
 ```
 docker container run \
   --name jenkins-docker \
@@ -69,7 +69,8 @@ ERROR: for compose_jenkins-blueocean_1  Cannot start service jenkins-blueocean: 
 
 Deberemos parar los contenedores existente volver a ejecutar
 ```
-docker-compose -f jenkins.yml up -d
+docker kill CONTAINER-ID
+docker-compose -f compose/jenkins.yml up -d
 ``` 
 
 Podremos ver los volúmenes creados usando
@@ -121,12 +122,12 @@ Aceptar todo hasta llegar a la pantalla de Jenkins.
 
 Ahora pararemos los contenedores y los volveremos a iniciar para asegurarnos de que nuestros datos persisten:
 ```
-docker-compose -f jenkins.yml down
+docker-compose -f compose/jenkins.yml down
 ```
 
 y después
 ```
-docker-compose -f jenkins.yml up -d
+docker-compose -f compose/jenkins.yml up -d
 ```
 
 Deberíamos poder hacer login con admin:admin123
@@ -151,11 +152,27 @@ y marcamos:
 - repo (todo)
 - admin:repo_hook (todo)
 
+Con ese Token vamos nos vamos a Credentials > Sytem:
+
+Seleccionamos "Add domain" e introducimos `api.github.com`
+
+Ahora navegamos dentro del dominio y seleccionamos "Add Credentials" > Secret Text
+
+Y en ID ponemos "GitHubToken" y en Secret Text introducimos nuestro token.
+
+> Alternativa
+
 También podemos hacerlo directamente en Jenkins a través de 
 
 Administrar Jenkins > Configurar > Scroll down hasta 'GitHub Servers' > Add GitHub Server > Avanzado > 
 
-Manage Additional actions > Convert login and password to token
+Manage Additional actions > Convert login and password to token 
+
+# Configure GitHub Server
+
+Navegamos a Administrar Jenkins > Configurar > Scroll down hasta 'GitHub Servers' > Add GitHub Server > Seleccionamos nuestras credenciales de Token y le damos a "Test connection"
+
+Le damos a "Guardar"
 
 # Add Git credentials
 

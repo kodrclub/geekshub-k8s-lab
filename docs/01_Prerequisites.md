@@ -146,3 +146,6 @@ Seguir las instrucciones [aquí](https://docs.docker.com/compose/install/)
 
 > Este paso se puede automatizar en Linux usando el script [01_install_docerk.sh] (../scripts/01_install_docker.sh)
 
+## Antes de empezar
+
+Os recomiendo borrar el contenido de las carpetas "compose" y "deployments" ya que ahí tenéis los resultados de la práctica.
