@@ -12,7 +12,7 @@ kubectl create namespace production
 o creamos un archivo "production-namespace.yaml" con el siguiente contenido:
 
 ```
-cat > ./deployments/production-namespace.yaml <<EOF
+cat > ./production-namespace.yaml <<EOF
 apiVersion: v1
 kind: Namespace
 metadata:

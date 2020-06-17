@@ -14,7 +14,7 @@ Primero generemos el archivo db_secrets.yaml
 DB_USER=db_user
 DB_PASSWORD=MyStrongPass123!
 
-cat > ./deployments/secrets.yaml <<EOF
+cat > ./secrets.yaml <<EOF
 apiVersion: v1
 kind: Secret
 metadata:
@@ -30,7 +30,7 @@ EOF
 Deplegamos los secrets en el cluster
 
 ```
-kubectl apply -f deployments/secrets.yml
+kubectl apply -f secrets.yml
 ```
 
 > IMPORTANTE: Estos credenciales no están encriptados y no deberían subirse a un repositorio sin encriptar previamente. Se puede usar un gestor de secretos como Vault o git-cript.
@@ -89,7 +89,7 @@ spec:
 Llegados a este punto podemos hacer un despliegue y verificar que todo esté en orden.
 
 ```
-kubectl apply -f deployments/postgresql-deployment.yaml
+kubectl apply -f postgresql-deployment.yaml
 ```
 
 Si hubiera algún error siempre podemos usar el comando

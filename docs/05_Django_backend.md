@@ -100,7 +100,7 @@ spec:
 ```
 
 ```
-kubectl apply -f deployments/django-deployment.yaml
+kubectl apply -f django-deployment.yaml
 ```
 
 Para ver cuando están disponibles las pods usaremos
@@ -147,7 +147,7 @@ docker push ${your_user}/${my_coolname}:v2.0.0
 
 Editamos el archivo django-deployment.yaml y ponemos la nueva imagen de referencia y applicamos los cambios con
 ```
-kubectl apply -f deployments/django-deployment.yaml
+kubectl apply -f django-deployment.yaml
 ```
 
 Y anotamos los cambios
