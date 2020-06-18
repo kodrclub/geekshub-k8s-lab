@@ -1,11 +1,19 @@
 # Jenkins (Part 2)
 
+## Docker-Hub registry
+
+Antes de empezar vamos a necesitar un repo en docker-hub al que subir nuestra imágenes.
+
+Vamos a [Docker Hub](https://hub.docker.com/repository/create) y creamos un repo de nombre `geekshub-django`
+
 ## Crear MultiBranch Pipeline
 
-Creamos una "MultiBranch Pipeline"
+Vamos a nuestro Jenkins (probablemente [http://localhost:8080](http://localhost:8080)) y creamos "Nueva Tarea"
 
-1. En Branch sources seleccionamos Git y añadimos nuestra URL y nuestros credenciales
-2. En Pipeline model definition introducimos nuestra dirección de docker registry y nuestros credenciales
+Ponemos un nombre (p.ej. "Geekshubs Django") y seleccionamos una "MultiBranch Pipeline"
+
+1. En Branch sources seleccionamos GitHub y añadimos nuestra URL y nuestros credenciales
+2. En Declarative Pipeline (Docker) introducimos la dirección de docker registry `https://registry.hub.docker.com` y seleccionamos nuestros credenciales en el dropdown
 3. Guardamos y le damos a "Scan Repository Now"
 
 Ahora nos vamos al repo donde tenemos nuestro backend de Django y creamos un archivo de tipo Jenkinsfile
@@ -17,7 +25,8 @@ touch Jenkinsfile
 pipeline {
     agent any
     triggers {
-        pollSCM('')
+        /* Vamos a pullear el repo activamente porque en nuestra instalación local sería complicado usar Webhooks */
+        pollSCM('* * * * */1')
     }
 
 }
@@ -26,8 +35,8 @@ pipeline {
 Cargamos las variables de entorno de Docker añadiendo debajo de triggers
 ```
     environment {
-        registry = "escarti/geekshub-django"
-        registryCredential = 'docker-registry'
+        registry = "escarti/geekshub-django" /* Usad vuestro docker-hub registry */
+        registryCredential = 'Docker'
         imageTag = "${env.GIT_BRANCH + '_' + env.BUILD_NUMBER}"
 
     }
@@ -56,7 +65,7 @@ Ahora queremos que Jenkins se encarge de construir las imágenes de Docker y sub
         stage('Deploy Image') {
             steps{
                 script {
-                    docker.withRegistry( '', registryCredential ) {
+                    docker.withRegistry( 'https://registry.hub.docker.com', registryCredential ) {
                         dockerImage.push()
                     }
                 }
@@ -89,7 +98,9 @@ Mostrar la dirección de nuestro API server de minikube
 APISERVER=$(kubectl config view --minify | grep server | cut -f 2- -d ":" | tr -d " ")
 ```
 
-Crear los credenciales del token en Jenkins
+### Crear los credenciales del token en Jenkins
+
+Vamos a Jenkins > Credentials > System > Global credentials (unrestricted) y creamos un credencial de tipo "Secret Text" con ID `minikube-auth-token` y pegamos el resultado de `echo $TOKEN`.
 
 ## Instalar kubectl en el contenedor de Jenkins
 

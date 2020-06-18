@@ -179,7 +179,7 @@ Le damos a "Guardar"
 Nos vamos a Credentials > Sytem > Global credentials > Add credentials
 
 1. Seleccionamos username with password
-2. Introducimos datos y como ID usamos Git (o GitHub o lo que nos parezca :) )
+2. Introducimos datos y como ID usamos GitHub (o Git o lo que nos parezca :) )
 3. Damos a Ok
 
 # Add Docker credentials
