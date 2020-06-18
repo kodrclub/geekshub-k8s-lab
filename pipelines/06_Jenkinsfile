@@ -49,7 +49,7 @@ pipeline {
             }
             steps{
                 script {
-                    withCredentials([usernamePassword(credentialsId: 'Git-Encoded', usernameVariable: 'username', passwordVariable: 'password')]){
+                    withCredentials([usernamePassword(credentialsId: 'GitHub', usernameVariable: 'username', passwordVariable: 'password')]){
                         sh "rm -rf geekshub-django-deployment"
                         sh "git clone https://$username:$password@github.com/escarti/geekshub-django-deployment.git"
                         dir("geekshub-django-deployment") {

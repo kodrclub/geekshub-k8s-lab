@@ -174,6 +174,10 @@ Navegamos a Administrar Jenkins > Configurar > Scroll down hasta 'GitHub Servers
 
 Le damos a "Guardar"
 
+# Configure Global Git 
+
+Navegamos a Administrar Jenkins > Configurar > Scroll down hasta 'GitHub plugin' e introducimos `Global Config user.name Value` y `Global Config user.email Value`
+
 # Add Git credentials
 
 Nos vamos a Credentials > Sytem > Global credentials > Add credentials

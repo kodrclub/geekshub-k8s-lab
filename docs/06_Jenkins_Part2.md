@@ -253,8 +253,8 @@ Creamos un repositorio para guardar nuestro archivo de deployment de develop en 
 
 Ahora en Jenkins descargaremos el archivo de deployment.
 
-> IMPORTANTE: Añadir nombre e email para GIT en Jenkins
-> Si vuestra contraseña contiene carácteres especiales deberéis crear un credencial nuevo con vuestra contraseña en URLENCODED
+> IMPORTANTE: Añadir nombre e email para GIT en Jenkins. Para ello navegamos a Administrar Jenkins > Configurar > Scroll down hasta 'GitHub plugin' e introducimos `Global Config user.name Value` y `Global Config user.email Value`
+> Si vuestra contraseña contiene carácteres especiales deberéis crear un credencial nuevo con vuestra contraseña en URLENCODED. En mi caso la he llamado `Git-Encoded`. La docu la dejo con el ID `GitHub`original
 
 Añadimos esta fase:
 
@@ -265,7 +265,7 @@ stage('Update deployment file') {
             }
             steps{
                 script {
-                    withCredentials([usernamePassword(credentialsId: 'Git-Encoded', usernameVariable: 'username', passwordVariable: 'password')]){
+                    withCredentials([usernamePassword(credentialsId: 'GitHub', usernameVariable: 'username', passwordVariable: 'password')]){
                         sh "rm -rf geekshub-django-deployment"
                         sh "git clone https://$username:$password@github.com/escarti/geekshub-django-deployment.git"
                         dir("geekshub-django-deployment") {
