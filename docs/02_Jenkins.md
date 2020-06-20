@@ -138,7 +138,8 @@ Deberíamos poder hacer login con admin:admin123
 
 Nos vamos a Jenkins > Administrar jenkins e instalamos los plugins de
 
-1. GitHub
+1. GitHub Integration Plugin
+2. GitHub plugin
 2. Kubernetes
 3. Docker
 4. Kubernetes CLI plugin

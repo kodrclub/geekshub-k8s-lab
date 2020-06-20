@@ -79,28 +79,4 @@ pipeline {
             }
         }
     }
-    /* post {
-    *    success {
-    *        script {
-    *            showtime.completeDeployment(this)
-    *        }
-    *    }
-    *    failure {
-    *        script {
-    *            if(env.GIT_BRANCH == productionBranch) {
-    *                def String slackChannel = "#hf-platform-alerts"
-    *
-    *                slackSend baseUrl: slackUrl, 
-    *                channel: slackChannel, 
-    *                color: '#951D13', 
-    *                message: "$env.GIT_URL: Error deploying branch $env.GIT_BRANCH", 
-    *                teamDomain: 'nw-hf', 
-    *                tokenCredentialId: slackTokenId
-    *
-    *                showtime.abortDeployment(this)
-    *            }
-    *        }
-    *    }
-    *}
-    */
 }
