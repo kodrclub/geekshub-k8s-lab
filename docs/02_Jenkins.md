@@ -31,21 +31,23 @@ docker container run \
   docker:dind
 ```
 
-Ahora lanzamos jenkins/blueocean
+Ahora lanzamos jenkins/jenkins:lts-alpine
 ```
 docker container run \
-  --name jenkins-blueocean \
+  --name jenkins \
   --rm \
   --detach \
   --network jenkins \
+  --dns 8.8.8.8
   --env DOCKER_HOST=tcp://docker:2376 \
   --env DOCKER_CERT_PATH=/certs/client \
   --env DOCKER_TLS_VERIFY=1 \
+  --env JAVA_OPTS="-Xmx2048m -Djava.awt.headless=true" \
   --publish 8080:8080 \
   --publish 50000:50000 \
   --volume jenkins-data:/var/jenkins_home \
   --volume jenkins-docker-certs:/certs/client:ro \
-  jenkinsci/blueocean
+  jenkins/jenkins:lts-alpine
 ```
 
 > BONUS crear un archivo de docker compose para automatizar este proceso
@@ -54,17 +56,19 @@ Todos estos pasos se pueden automatizar mediante docker-compose. Ver [jenkins.ym
 
 Navegar al directorio "compose" y ejecutar
 ```
-docker-compose -f jenkins.yml up -d
+docker-compose -f jenkins_build.yml up -d
 ```
+
+> El docker-compose jenkins_build.yml ya instala docker y kubectl en el contenedor por lo que nos ahoramos hacerlo manualmente
 
 Si no hemos destruido o parado los contenedores anteriores, el sistema nos alertará de un conflicto con los puertos
 ```
 WARNING: Host is already in use by another container
 
 ERROR: for compose_jenkins-docker_1  Cannot start service jenkins-docker: driver failed programming external connectivity on endpoint compose_jenkins-docker_1 (f1f6a58539792074c55ec31787226ab836406cd8c2dca0144dd8799303d644e3): Bind for 0.0.0.0:2376 failed: port is already allocated
-Creating compose_jenkins-blueocean_1 ... error
+Creating compose_jenkins_1 ... error
 
-ERROR: for compose_jenkins-blueocean_1  Cannot start service jenkins-blueocean: driver failed programming external connectivity on endpoint compose_jenkins-blueocean_1 (12886eed248bb4cb9305dd46911aa3ca3178f7798c4732423cfa90c8e652bd61): Bind for 0.0.0.0:50000 failed: port is already allocated
+ERROR: for compose_jenkins_1  Cannot start service jenkins: driver failed programming external connectivity on endpoint compose_jenkins_1 (12886eed248bb4cb9305dd46911aa3ca3178f7798c4732423cfa90c8e652bd61): Bind for 0.0.0.0:50000 failed: port is already allocated
 ```
 
 Deberemos parar los contenedores existente volver a ejecutar
@@ -95,11 +99,11 @@ docker ps
 Deberíamos ver algo así
 ```
 CONTAINER ID        IMAGE                 COMMAND                  CREATED             STATUS              PORTS                                              NAMES
-60f9136cfb3e        jenkinsci/blueocean   "/sbin/tini -- /usr/…"   9 minutes ago       Up 8 seconds        0.0.0.0:8080->8080/tcp, 0.0.0.0:50000->50000/tcp   compose_jenkins-blueocean_1
+60f9136cfb3e        jenkins/jenkins:lts-alpine   "/sbin/tini -- /usr/…"   9 minutes ago       Up 8 seconds        0.0.0.0:8080->8080/tcp, 0.0.0.0:50000->50000/tcp   compose_jenkins_1
 a134bd24d67c        docker:dind           "dockerd-entrypoint.…"   9 minutes ago       Up 8 seconds        2375/tcp, 0.0.0.0:2376->2376/tcp                   compose_jenkins-docker_1
 ```
 
-Para instalar jenkins necesitamos una clave que se encuentra dentro del contenedor así que nos conectamos al contenedor de blueocean
+Para instalar jenkins necesitamos una clave que se encuentra dentro del contenedor así que nos conectamos al contenedor de jenkins:lts-alpine
 ```
 docker exec -it 60f9136cfb3e bash
 ```
@@ -134,14 +138,37 @@ Deberíamos poder hacer login con admin:admin123
 
 > ¡ENHORABUENA! Hemos instalado Jenkins con éxito.
 
+## Instalar docker en Jenkins Alpine
+
+Ahora debemos instalar docker dentro del contenedor de docker-alpine de Jenkins. 
+
+Hacemos `docker ps` y obtenemos el HASH del contenedor de Jenkins y ejecutamos:
+
+```
+docker exec -u root -it 194fdd323437 bash
+```
+
+Una vez dentro del contenedor ejecutamos los siguientes comandos:
+```
+apk add --update docker openrc
+rc-update add docker boot
+```
+
+Hecho esto el comando `docker ps` dentro del contenedor debería devolver:
+
+```
+CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES
+```
+
 ## Plugins
 
 Nos vamos a Jenkins > Administrar jenkins e instalamos los plugins de
 
 1. GitHub Integration Plugin
 2. GitHub plugin
-2. Kubernetes
-3. Docker
+3. Kubernetes
+4. Docker plugin
+5. Docker Pipeline
 4. Kubernetes CLI plugin
 
 y reiniciamos el servidor

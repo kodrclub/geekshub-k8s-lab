@@ -1,4 +1,4 @@
-version: '3'
+version: '3.8'
 
 # Los volúmenes se comparten en el scope del docker-compose
 # Si queremos unos volúmenes válidos para todo el entorno de 
@@ -14,8 +14,8 @@ services:
     ports:
       - "2376:2376"
     volumes:
-      - jenkins-docker-certs:/certs/client 
-      - jenkins-data:/var/jenkins_home 
+      - jenkins-docker-certs:/certs/client:cached
+      - jenkins-data:/var/jenkins_home:cached
     networks:
       jenkins:
         aliases:
@@ -24,20 +24,22 @@ services:
       DOCKER_TLS_CERTDIR: /certs
     privileged: true
 
-  jenkins-blueocean:
+  jenkins:
     build: .
     ports:
       - "8080:8080"
       - "50000:50000"
     volumes:
-      - jenkins-docker-certs:/certs/client 
-      - jenkins-data:/var/jenkins_home 
+      - jenkins-docker-certs:/certs/client:cached
+      - jenkins-data:/var/jenkins_home:cached
     networks:
       jenkins:
     environment:
       DOCKER_HOST: tcp://docker:2376
       DOCKER_CERT_PATH: /certs/client
       DOCKER_TLS_VERIFY: 1
+      JAVA_OPTS: "-Xmx2048m -Djava.awt.headless=true"
+
 
 networks:
   jenkins:

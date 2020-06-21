@@ -58,7 +58,7 @@ Ahora queremos que Jenkins se encarge de construir las imágenes de Docker y sub
         stage('Build image') {
             steps {
                 script {
-                    dockerImage = docker.build(registry + ":$imageTag","--network host .")
+                    dockerImage = docker.build(registry + ":$imageTag", "--cache-from $registry:latest --network host .")
                 }
             }
         }
@@ -67,6 +67,7 @@ Ahora queremos que Jenkins se encarge de construir las imágenes de Docker y sub
                 script {
                     docker.withRegistry( 'https://registry.hub.docker.com', registryCredential ) {
                         dockerImage.push()
+                        dockerImage.push('latest')
                     }
                 }
             }
@@ -186,7 +187,7 @@ pipeline {
         stage('Build image') {
             steps {
                 script {
-                    dockerImage = docker.build(registry + ":$imageTag","--network host .")
+                    dockerImage = docker.build(registry + ":$imageTag", "--cache-from $registry:latest --network host .")
                 }
             }
         }
@@ -194,7 +195,7 @@ pipeline {
             steps{
                 script {
                     docker.withRegistry( '', registryCredential ) {
-                        dockerImage.push()
+                        dockerImage.push()                                                dockerImage.push('latest')
                     }
                 }
             }

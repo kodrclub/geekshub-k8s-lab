@@ -1,4 +1,4 @@
-version: '3'
+version: '3.8'
 
 # Los volúmenes se comparten en el scope del docker-compose
 # Si queremos unos volúmenes válidos para todo el entorno de 
@@ -24,8 +24,10 @@ services:
       DOCKER_TLS_CERTDIR: /certs
     privileged: true
 
-  jenkins-blueocean:
-    image: "jenkinsci/blueocean"
+  jenkins:
+    image: "jenkins/jenkins:lts-alpine"
+    dns:
+      - 8.8.8.8
     ports:
       - "8080:8080"
       - "50000:50000"
@@ -38,6 +40,7 @@ services:
       DOCKER_HOST: tcp://docker:2376
       DOCKER_CERT_PATH: /certs/client
       DOCKER_TLS_VERIFY: 1
+      JAVA_OPTS: "-Xmx2048m -Djava.awt.headless=true"
 
 networks:
   jenkins:
