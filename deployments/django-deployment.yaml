@@ -12,7 +12,7 @@ spec:
       port: 8000
       targetPort: 8000
   type: NodePort
---- 
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -31,7 +31,7 @@ spec:
     spec:
       containers:
         - name: django
-          image: escarti/geekshub-django:latest
+          image: kodrclub/geekshub-django
           ports:
             - containerPort: 8000
           env:
